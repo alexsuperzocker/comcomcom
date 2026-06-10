@@ -1,0 +1,7 @@
+1 awt #001
+2 sto #011
+3 awt #001
+4 add #011
+5 sto #001
+6 fsh
+7 hlt
