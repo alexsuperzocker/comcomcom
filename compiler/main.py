@@ -61,6 +61,8 @@ def translate_num(num):
     out = None
     try:    # decimal
         num = int(num)
+        if(num > 2**NUM_SIZE - 1 or num < -1 * 2**(NUM_SIZE - 1)):
+            raise f"Number {num} to large!"
         if(num >= 0):
             out = num
         else:
@@ -101,19 +103,37 @@ def read_instructions(file):
 
     seperator = " "
     instructions = []
+    i = 0
     for line in lines:
         try:
             split_1 = line.strip().split(seperator)
-            ic = split_1[0]
-            op = split_1[1]
-            arg = None
-            if(len(split_1) > 2):
+            ic, op, arg = None, None, None
+
+            if(len(split_1) >= 3):
+                ic = split_1[0]
+                op = split_1[1]
                 arg = split_1[2]
+            
+            elif(len(split_1) == 1):
+                ic = ('{0:0'+str(NUM_SIZE)+'b}').format(i)
+                op = split_1[0]
+
+            else:
+                if(split_1[0].upper() in OPS.keys()):
+                    ic = ('{0:0'+str(NUM_SIZE)+'b}').format(i)
+                    op = split_1[0]
+                    arg = split_1[1]
+                else:
+                    ic = split_1[0]
+                    op = split_1[1]
+                
+            
             instruction = Instruction(ic, op, arg)
             instructions.append(instruction)
         except:
             raise f"Error during reading of file! Could not convert line '{line}' to Instruction!"
         
+        i += 1
     return instructions
 
 def generate_binary(instructions):
