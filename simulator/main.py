@@ -237,7 +237,7 @@ def load_computer(file):
     return comp
 
 def main():
-    delay = 1
+    delay = 0.3
     path = pick_file()
     comp = load_computer(path)
     while(comp.is_running()):

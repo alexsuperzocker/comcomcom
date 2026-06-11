@@ -2,11 +2,12 @@ from main import is_valid_bits, NUM_SIZE
 
 def flush(out_registers):
     for register in out_registers:
+        print("|", end="")
         for bit in register:
             if(bit == "1"):
-                print("#", end="")
+                print("#", end="|")
             else:
-                print("_", end="")
+                print("_", end="|")
         print()
     print()
 
