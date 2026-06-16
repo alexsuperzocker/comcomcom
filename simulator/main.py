@@ -4,7 +4,7 @@ from time import sleep
 
 NUM_SIZE = 12
 OP_SIZE = 4
-
+DELAY = 0
 DEBUG = False
 
 def is_valid_bits(bits, length):
@@ -153,7 +153,8 @@ class Computer:
             self.__increment_ic()
 
     def flush(self, _):
-        print("FLUSH!")
+        if(DEBUG):
+            print("FLUSH!")
 
         simul_i_o.flush(self.get_out_registers())
 
@@ -218,7 +219,8 @@ class Computer:
 
         funct(arg)
 
-        print(f"Executed operation {op} {arg}")
+        if(DEBUG):
+            print(f"Executed operation {op} {arg}")
     
 def load_computer(file):
     lines = []
@@ -239,12 +241,11 @@ def load_computer(file):
     return comp
 
 def main():
-    delay = 0.3
     path = pick_file()
     comp = load_computer(path)
     while(comp.is_running()):
         comp.tick()
-        sleep(delay)
+        sleep(DELAY)
     print("Computer terminated!")
 
 if __name__ == "__main__":
