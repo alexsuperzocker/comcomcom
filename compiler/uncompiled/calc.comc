@@ -1,0 +1,42 @@
+inp #001
+sto #111
+inp #fff
+sto #11f
+sto #000
+fsh
+awt #001
+sto #021
+sto #000
+lod #11f
+sto #001
+fsh
+awt #001
+sto #022
+sto #001
+inp #aaa
+sto #002
+fsh
+awt #002
+sto #002
+jmz 29
+sub #111
+jmz 32
+sub #111
+jmz 35
+sub #111
+jmz 38
+jmp 19
+lod #021
+add #022
+jmp 40
+lod #021
+sub #022
+jmp 40
+lod #021
+mul #022
+jmp 40
+lod #021
+div #022
+sto #003
+fsh
+hlt
