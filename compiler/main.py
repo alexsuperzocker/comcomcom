@@ -103,7 +103,7 @@ def read_instructions(file):
 
     seperator = " "
     instructions = []
-    i = 0
+    i = 1
     for line in lines:
         try:
             split_1 = line.strip().split(seperator)
