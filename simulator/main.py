@@ -3,7 +3,7 @@ from file_man import pick_file
 from time import sleep
 
 NUM_SIZE = 12
-OP_SIZE = 4
+OP_SIZE = 5
 DELAY = 0
 DEBUG = False
 
@@ -48,28 +48,41 @@ class Computer:
         self.__running = True
 
         self.func_map = {
-            "0000" : self.add,
-            "0001" : self.sub,
-            "0010" : self.mul,
-            "0011" : self.div,
-            "0100" : self.load,
-            "0101" : self.store,
-            "0110" : self._input,
-            "0111" : self.jump,
-            "1000" : self.jump_zero,
-            "1001" : self.jump_greater_zero,
-            "1010" : self.flush,
-            "1011" : self._await,
-            "1100" : self.halt,
-            "1101" : self.func,
-            "1110" : self.isfree,
-            "1111" : self.delete
+            "00000" : self.add,
+            "00001" : self.sub,
+            "00010" : self.mul,
+            "00011" : self.div,
+            "00100" : self.load,
+            "00101" : self.store,
+            "00110" : self._input,
+            "00111" : self.jump,
+            "01000" : self.jump_zero,
+            "01001" : self.jump_greater_zero,
+            "01010" : self.flush,
+            "01011" : self._await,
+            "01100" : self.halt,
+            "01101" : self.func,
+            "01110" : self.isfree,
+            "01111" : self.delete,
+            "10000" : self.add_imm,
+            "10001" : self.sub_imm,
+            "10010" : self.mul_imm,
+            "10011" : self.div_imm,
+            "10100" : self.load_adr,
+            "10101" : self.store_adr,
+            "10110" : self.go_adr,
+            "10111" : self._and,
+            "11000" : self._or,
+            "11001" : self._xor,
+            "11010" : self._mod,
+            "11011" : self._mod_imm,
+            "11111" : self.noop
         }
 
     def __increment_ic(self):
         self.ic = bitwise_arithmatic(self.ic, zeroes(), lambda a, _: a + 1)
 
-    def halt(self, _):
+    def halt(self, _=zeroes()):
         self.__running = False
 
     def add(self, arg):
@@ -152,7 +165,7 @@ class Computer:
         else:
             self.__increment_ic()
 
-    def flush(self, _):
+    def flush(self, _=zeroes()):
         if(DEBUG):
             print("FLUSH!")
 
@@ -191,6 +204,130 @@ class Computer:
         
         self.accu = simul_i_o.usr_input(adress)
 
+        self.__increment_ic()
+
+    def add_imm(self, arg):
+        if(not is_valid_bits(arg, NUM_SIZE)):
+            raise "Invalid value!"
+
+        self.accu = bitwise_arithmatic(self.accu, arg, lambda a, b: a + b)
+        self.__increment_ic()
+
+    def sub_imm(self, arg):
+        if(not is_valid_bits(arg, NUM_SIZE)):
+            raise "Invalid value!"
+        
+        self.accu = bitwise_arithmatic(self.accu, arg, lambda a, b: a - b)
+        self.__increment_ic()
+
+    def mul_imm(self, arg):
+        if(not is_valid_bits(arg, NUM_SIZE)):
+            raise "Invalid value!"
+        
+        self.accu = bitwise_arithmatic(self.accu, arg, lambda a, b: a * b)
+        self.__increment_ic()
+
+    def div_imm(self, arg):
+        if(not is_valid_bits(arg, NUM_SIZE)):
+            raise "Invalid value!"
+        
+        self.accu = bitwise_arithmatic(self.accu, arg, lambda a, b: a / b)
+        self.__increment_ic()
+
+    def go_adr(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        ic = self.ram.get(adress, zeroes())
+
+        self.jump(ic)
+        
+    def store_adr(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        adr = self.ram.get(adress, zeroes())
+
+        self.store(adr)
+        
+    def load_adr(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        adr = self.ram.get(adress, zeroes())
+
+        self.load(adr)
+        
+    def _and(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        arg = self.ram.get(adress, zeroes())
+        result = ""
+
+        for i in range(NUM_SIZE):
+            if(self.accu[i] == "1" and arg[i] == "1"):
+                result += "1"
+            else:
+                result += "0"
+
+        self.accu = result
+        
+        self.__increment_ic()
+        
+    def _or(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        arg = self.ram.get(adress, zeroes())
+        result = ""
+
+        for i in range(NUM_SIZE):
+            if(self.accu[i] == "1" or arg[i] == "1"):
+                result += "1"
+            else:
+                result += "0"
+
+        self.accu = result
+        
+        self.__increment_ic()
+        
+    def _not(self, _):
+        self.accu = bitwise_arithmatic(self.accu, zeroes(), lambda a, _: (a * -1) - 1)
+        self.__increment_ic()
+
+    def _xor(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        arg = self.ram.get(adress, zeroes())
+        result = ""
+
+        for i in range(NUM_SIZE):
+            if((self.accu[i] == "1" or arg[i] == "1") and not (self.accu[i] == "1" and arg[i] == "1")):
+                result += "1"
+            else:
+                result += "0"
+
+        self.accu = result
+
+        self.__increment_ic()
+
+    def _mod(self, adress):
+        if(not is_valid_bits(adress, NUM_SIZE)):
+            raise "Invalid memory adress!"
+        
+        self.accu = bitwise_arithmatic(self.accu, self.ram.get(adress, zeroes()), lambda a, b: abs(a) % abs(b))
+        self.__increment_ic()
+
+    def _mod_imm(self, arg):
+        if(not is_valid_bits(arg, NUM_SIZE)):
+            raise "Invalid value!"
+        
+        self.accu = bitwise_arithmatic(self.accu, arg, lambda a, b: abs(a) % abs(b))
+        self.__increment_ic()
+
+    def noop(self, _=zeroes()):
         self.__increment_ic()
 
     def get_out_registers(self):

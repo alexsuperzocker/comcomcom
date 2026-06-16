@@ -2,25 +2,38 @@ from file_man import pick_file, get_file_name, DEFAULT_COMPILED
 from os.path import join
 
 NUM_SIZE = 12
-OP_SIZE = 4
+OP_SIZE = 5
 
 OPS = {
-    "ADD" : "0000",
-    "SUB" : "0001",
-    "MUL" : "0010",
-    "DIV" : "0011",
-    "LOD" : "0100",
-    "STO" : "0101",
-    "INP" : "0110",
-    "JMP" : "0111",
-    "JMZ" : "1000",
-    "JGZ" : "1001",
-    "FSH" : "1010",
-    "AWT" : "1011",
-    "HLT" : "1100",
-    "FNC" : "1101",
-    "ISF" : "1110",
-    "DEL" : "1111"
+    "ADD" : "00000",
+    "SUB" : "00001",
+    "MUL" : "00010",
+    "DIV" : "00011",
+    "LOD" : "00100",
+    "STO" : "00101",
+    "INP" : "00110",
+    "JMP" : "00111",
+    "JMZ" : "01000",
+    "JGZ" : "01001",
+    "FSH" : "01010",
+    "AWT" : "01011",
+    "HLT" : "01100",
+    "FNC" : "01101",
+    "ISF" : "01110",
+    "DEL" : "01111",
+    "ADI" : "10000",
+    "SBI" : "10001",
+    "MLI" : "10010",
+    "DVI" : "10011",
+    "LDA" : "10100",
+    "STA" : "10101",
+    "GOA" : "10110",
+    "AND" : "10111",
+    "ORE" : "11000",
+    "XOR" : "11001",
+    "MOD" : "11010",
+    "MDI" : "11011",
+    "NOP" : "11111"
 }
 
 HEX_SYM = [str(a) for a in range(10)]
