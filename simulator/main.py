@@ -76,6 +76,7 @@ class Computer:
             "11001" : self._xor,
             "11010" : self._mod,
             "11011" : self._mod_imm,
+            "11100" : self._not,
             "11111" : self.noop
         }
 

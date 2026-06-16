@@ -46,4 +46,4 @@ inp 000000000111
 mul #011
 add 0
 sto 0
-inp 
+inp
