@@ -5,6 +5,8 @@ from time import sleep
 NUM_SIZE = 12
 OP_SIZE = 4
 
+DEBUG = False
+
 def is_valid_bits(bits, length):
     if len(bits) != length:
         return False
@@ -106,10 +108,7 @@ class Computer:
         if(not is_valid_bits(adress, NUM_SIZE)):
             raise "Invalid memory adress!"
 
-        if(adress in self.ram.keys()):
-            self.accu = zeroes()
-        else:
-            self.accu = self.ram.get(adress)
+        self.accu = self.ram.get(adress, zeroes())
 
         self.__increment_ic()
 
@@ -197,10 +196,7 @@ class Computer:
         registers = []
         for i in range(12):
             adress = ('{0:0'+str(NUM_SIZE)+'b}').format(i)
-            if(adress not in self.ram.keys()):
-                registers.append(zeroes())
-            else:
-                registers.append(self.ram.get(adress))
+            registers.append(self.ram.get(adress, zeroes()))
 
         return registers
     
@@ -213,6 +209,12 @@ class Computer:
         op, arg = instruction
 
         funct = self.func_map.get(op)
+
+        if(DEBUG):
+            print(f"{self.ic = }")
+            print(f"{self.accu = }")
+            print(f"{op = }")
+            print(f"{arg = }")
 
         funct(arg)
 
