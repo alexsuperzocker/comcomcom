@@ -1,0 +1,49 @@
+inp 1
+sto #111
+sto #011
+inp 0   //clear output
+sto 0
+sto 1
+sto 2
+sto 3
+sto 4
+awt #002    //await offset n
+jmz 23
+sto #010
+inp 4
+mul #010
+sto #010    //calculate 2^(4*n)
+inp 2
+mul #011
+sto #011
+lod #010
+sub #111
+sto #010
+jgz 16
+awt #001    //get number 0-9
+sto #020
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+sub #111
+jmz ...
+jmp ...     //back up to awt #001
+inp 000000000111
+mul #011
+add 0
+sto 0
+inp 
